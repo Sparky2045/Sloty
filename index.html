@@ -2,26 +2,162 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sloty</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Sloty 🎰</title>
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .slots {
+      font-size: 80px;
+      display: flex;
+      gap: 40px;
+      margin-bottom: 20px;
+      height: 100px;
+    }
+
+    button {
+      font-size: 20px;
+      padding: 10px 20px;
+      margin-top: 10px;
+    }
+
+    .info {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    .coin-count {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-size: 18px;
+    }
+
+    .timer {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      font-size: 16px;
+    }
+
+    select {
+      font-size: 16px;
+      padding: 5px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <div id="time">🕒 --:--:--</div>
-  </header>
-  <main>
+  <div class="timer">Neue Coins in: <span id="timer">--:--:--</span></div>
+
+  <div class="container">
     <h1>🎰 Sloty</h1>
-    <div id="slots">❓ ❓ ❓</div>
-    <div id="message"></div>
-    <button id="spin">🎲 Drehen (100 Coins)</button>
-  </main>
-  <footer>
-    <div id="coins">💰 Coins: 0</div>
-  </footer>
-  <div id="dev-console" style="display:none;">
-    <input type="text" id="dev-input" placeholder="/add 1000" />
+
+    <div class="slots" id="slots">
+      <div>❔</div>
+      <div>❔</div>
+      <div>❔</div>
+    </div>
+
+    <select id="betAmount">
+      <option value="50">50 Coins</option>
+      <option value="100" selected>100 Coins</option>
+      <option value="200">200 Coins</option>
+      <option value="500">500 Coins</option>
+    </select><br>
+
+    <button onclick="spin()">🎲 Drehen</button>
+    <div class="info" id="message">Drehe und gewinne!</div>
   </div>
-  <script src="script.js"></script>
+
+  <div class="coin-count">🪙 Coins: <span id="coins">1000</span></div>
+
+  <script>
+    const symbols = ["🍀", "💎", "🍒", "🔔", "7️⃣"];
+    let coins = 1000;
+    let cooldownSeconds = 86400; // 24h für neue Coins
+    const COIN_REWARD = 500;
+
+    function updateCoinsDisplay() {
+      document.getElementById("coins").textContent = coins;
+    }
+
+    function getRandomSymbol() {
+      return symbols[Math.floor(Math.random() * symbols.length)];
+    }
+
+    function spin() {
+      const bet = parseInt(document.getElementById("betAmount").value);
+      if (coins < bet) {
+        document.getElementById("message").textContent = "Nicht genug Coins!";
+        return;
+      }
+
+      coins -= bet;
+      updateCoinsDisplay();
+
+      const slotElements = document.querySelectorAll("#slots div");
+      let spins = 10;
+      let interval = setInterval(() => {
+        for (let el of slotElements) {
+          el.textContent = getRandomSymbol();
+        }
+        spins--;
+        if (spins <= 0) {
+          clearInterval(interval);
+          evaluateResult(slotElements, bet);
+        }
+      }, 100);
+    }
+
+    function evaluateResult(slotElements, bet) {
+      const result = Array.from(slotElements).map(el => el.textContent);
+      const messageEl = document.getElementById("message");
+
+      if (result.every(s => s === result[0])) {
+        coins += bet * 10;
+        messageEl.textContent = "🎉 JACKPOT! +" + (bet * 10) + " Coins!";
+      } else if (result[0] === result[1] || result[1] === result[2] || result[0] === result[2]) {
+        coins += bet * 2;
+        messageEl.textContent = "⭐ Kleiner Gewinn! +" + (bet * 2) + " Coins";
+      } else {
+        messageEl.textContent = "😢 Leider verloren...";
+      }
+      updateCoinsDisplay();
+    }
+
+    // Timer für tägliche Coins
+    let countdown = cooldownSeconds;
+    setInterval(() => {
+      countdown--;
+      if (countdown <= 0) {
+        coins += COIN_REWARD;
+        updateCoinsDisplay();
+        countdown = cooldownSeconds;
+        alert("🎁 Du hast neue Coins erhalten: +" + COIN_REWARD);
+      }
+      let hours = String(Math.floor(countdown / 3600)).padStart(2, "0");
+      let mins = String(Math.floor((countdown % 3600) / 60)).padStart(2, "0");
+      let secs = String(countdown % 60).padStart(2, "0");
+      document.getElementById("timer").textContent = `${hours}:${mins}:${secs}`;
+    }, 1000);
+
+    updateCoinsDisplay();
+  </script>
 </body>
 </html>
