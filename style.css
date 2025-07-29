@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #111;
+  color: #eee;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header, footer {
+  padding: 10px;
+  background: #222;
+  text-align: left;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#slots {
+  font-size: 60px;
+  margin: 20px 0;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#message {
+  margin: 10px;
+  height: 24px;
+  text-align: center;
+}
+
+#dev-console {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #333;
+  padding: 5px;
+}
+
+#dev-input {
+  width: 100%;
+  font-size: 16px;
+  padding: 8px;
+}
