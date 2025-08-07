@@ -1,55 +1,43 @@
 body {
+  background-color: #111;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
   margin: 0;
   padding: 0;
-  background: #111;
-  color: #eee;
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
 }
-
-header, footer {
-  padding: 10px;
-  background: #222;
-  text-align: left;
+.container {
+  padding-top: 40px;
 }
-
-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 80px);
+  grid-template-rows: repeat(3, 80px);
+  gap: 10px;
   justify-content: center;
-  align-items: center;
-}
-
-#slots {
-  font-size: 60px;
   margin: 20px 0;
+  font-size: 50px;
 }
-
 button {
-  padding: 10px 20px;
   font-size: 20px;
+  padding: 10px 20px;
+  margin-top: 10px;
   cursor: pointer;
 }
-
-#message {
-  margin: 10px;
-  height: 24px;
-  text-align: center;
-}
-
-#dev-console {
+.coin-count {
   position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: #333;
-  padding: 5px;
+  bottom: 10px;
+  left: 10px;
+  font-size: 18px;
 }
-
-#dev-input {
-  width: 100%;
+.timer {
+  position: fixed;
+  top: 10px;
+  left: 10px;
   font-size: 16px;
-  padding: 8px;
+}
+select {
+  font-size: 16px;
+  padding: 5px;
+  margin-top: 10px;
 }
