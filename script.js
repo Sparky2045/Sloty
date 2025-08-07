@@ -46,17 +46,21 @@ function spin() {
   spinSound.play();
 
   const grid = document.getElementById("slot-grid").children;
+  for (let cell of grid) cell.classList.remove("hit");
   let result = [];
-  for (let i = 0; i < 15; i++) {
-    setTimeout(() => {
-      const sym = getRandomSymbol();
-      grid[i].textContent = sym;
-      result[i] = sym;
-      if (i === 14) {
-        evaluate(result, bet);
-        document.getElementById("spinBtn").disabled = false;
-      }
-    }, i * 50);
+  for (let col = 0; col < 5; col++) {
+    for (let row = 0; row < 3; row++) {
+      let i = row * 5 + col;
+      setTimeout(() => {
+        const sym = getRandomSymbol();
+        grid[i].textContent = sym;
+        result[i] = sym;
+        if (i === 14) {
+          evaluate(result, bet);
+          document.getElementById("spinBtn").disabled = false;
+        }
+      }, col * 300 + row * 100);
+    }
   }
 }
 function evaluate(result, bet) {
@@ -70,6 +74,9 @@ function evaluate(result, bet) {
       let count = (c === d ? (d === e ? 5 : 4) : 3);
       let val = values[a][count-3] * bet;
       totalWin += val;
+      for (let i = 0; i < count; i++) {
+        document.getElementById("slot-grid").children[line[i]].classList.add("hit");
+      }
     }
   }
 
